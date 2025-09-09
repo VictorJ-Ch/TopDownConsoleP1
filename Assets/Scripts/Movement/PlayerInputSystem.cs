@@ -7,7 +7,7 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
 
     private IMovement playerMovement;
     private IRotate playerRot;
-    private IFire shoot;
+    private IFire fireManager;
     private IMovementLocked movementLocked;
 
     private Vector2 moveInput;
@@ -16,6 +16,10 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotSpeed = 720f;
 
+    [Header("Fire Settings")]
+    [SerializeField] private Transform fireSpawn;
+    [SerializeField] private GameObject bulletPrefab;
+
     private void Awake()
     {
         var rb = GetComponent<Rigidbody>();
@@ -23,7 +27,8 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
         playerMovement = new MovementController(rb, speed, rotSpeed);
         playerRot = (IRotate)playerMovement;
         movementLocked = (IMovementLocked)playerMovement;
-        shoot = new FireController();
+
+        fireManager = new FireController(fireSpawn, bulletPrefab, 10);
 
         inputActions = new IA_Player();
         inputActions.Player.SetCallbacks(this);
@@ -50,7 +55,7 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
     public void OnFire(InputAction.CallbackContext context)
     {
         if (context.performed)
-            shoot.Fire();
+            fireManager.Fire();
     }
 
     private void OnDisable()

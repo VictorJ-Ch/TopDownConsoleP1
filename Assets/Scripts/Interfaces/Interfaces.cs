@@ -3,6 +3,11 @@ public interface IMovement
 {
     void Move(Vector2 input);
 }
+public interface IMovementLocked
+{
+    void ToggleLock();
+    bool IsLocked { get; }
+}
 
 public interface IRotate
 {
@@ -12,10 +17,4 @@ public interface IRotate
 public interface IFire
 {
     void Fire();
-}
-
-public interface IMovementLocked
-{
-    void ToggleLock();
-    bool IsLocked { get; }
 }

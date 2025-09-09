@@ -3,16 +3,15 @@ public class MovementController : IMovement, IRotate, IMovementLocked
 {
     private readonly Rigidbody rb;
     private readonly float speed;
-    private readonly float rotationSpeed;
+    private readonly float rotSpeed;
     private bool isLocked;
-
     public bool IsLocked => isLocked;
 
-    public MovementController(Rigidbody rb, float speed, float rotationSpeed)
+    public MovementController(Rigidbody rb, float speed, float rotSpeed)
     {
         this.rb = rb;
         this.speed = speed;
-        this.rotationSpeed = rotationSpeed;
+        this.rotSpeed = rotSpeed;
     }
 
     public void Move(Vector2 input)
@@ -33,7 +32,7 @@ public class MovementController : IMovement, IRotate, IMovementLocked
         Quaternion smoothedRot = Quaternion.RotateTowards(
             rb.rotation,
             targetRot,
-            rotationSpeed * Time.fixedDeltaTime
+            rotSpeed * Time.fixedDeltaTime
         );
         rb.MoveRotation(smoothedRot);
     }
@@ -41,6 +40,5 @@ public class MovementController : IMovement, IRotate, IMovementLocked
     public void ToggleLock()
     {
         isLocked = !isLocked;
-        Debug.Log("Movement Locked: " + isLocked);
     }
 }
