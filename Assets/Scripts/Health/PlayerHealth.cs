@@ -26,7 +26,7 @@ public class PLayerHealth : MonoBehaviour, IHealth
 
         if (currentPlayersHealth <= 0)
         {
-            Debug.Log("Game Over");
+            uIManager?.GameOverScreen();
         }
     }
 }

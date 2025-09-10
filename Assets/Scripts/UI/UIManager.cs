@@ -10,16 +10,35 @@ public class UIManager : MonoBehaviour
 
     [Header("Health")]
     [SerializeField] private Slider playersUIHealth;
+    [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject winPanel;
 
     [Header("Bullets")]
     [SerializeField] private TextMeshProUGUI bulletStatusText;
     [SerializeField] private TextMeshProUGUI bulletCountText;
 
+    private void Start()
+    {
+        gameOverPanel.SetActive(false);
+        winPanel.SetActive(false);
+    }
     public void UpdateHealthSlider(int currentHealth, int maxHealth)
     {
         if (playersUIHealth == null) return;
 
         playersUIHealth.value = (float)currentHealth / maxHealth;
+    }
+
+    public void GameOverScreen()
+    {
+        if (gameOverPanel != null) { gameOverPanel.SetActive(true); }
+        // Do not forget to pause time.
+    }
+
+    public void WinScreen()
+    {
+        if (winPanel != null) { winPanel.SetActive(true); }
+        // Do not forget to pause time.
     }
 
     public void UpdateBulletUI(int available, int total)
