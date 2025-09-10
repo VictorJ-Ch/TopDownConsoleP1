@@ -11,7 +11,7 @@ public class BulletBehaviour : MonoBehaviour
 
     private void OnCollisionEnter(Collision coliision)
     {
-        Debug.Log(gameObject.name + " collided with " + coliision.gameObject.name);
+        //Debug.Log(gameObject.name + " collided with " + coliision.gameObject.name);
         gameObject.SetActive(false);
     }
 

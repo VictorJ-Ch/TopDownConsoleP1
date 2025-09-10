@@ -5,20 +5,24 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
 {
     private IA_Player inputActions;
 
+    [Header("Interfaces")]
     private IMovement playerMovement;
     private IRotate playerRot;
     private IFire fireManager;
     private IMovementLocked movementLocked;
 
-    private Vector2 moveInput;
 
     [Header("Movement Settings")]
+    private Vector2 moveInput;
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotSpeed = 720f;
 
     [Header("Fire Settings")]
     [SerializeField] private Transform fireSpawn;
     [SerializeField] private GameObject bulletPrefab;
+
+    [Header("UI Settings")]
+    [SerializeField] private UIManager uIManager;
 
     private void Awake()
     {
@@ -28,11 +32,15 @@ public class PlayerInputSystem : MonoBehaviour, IA_Player.IPlayerActions
         playerRot = (IRotate)playerMovement;
         movementLocked = (IMovementLocked)playerMovement;
 
-        fireManager = new FireController(fireSpawn, bulletPrefab, 10);
+        if (uIManager == null) { uIManager = FindFirstObjectByType<UIManager>(); }
+
+        fireManager = new FireController(fireSpawn, bulletPrefab, uIManager, coroutine => StartCoroutine(coroutine), 10);
 
         inputActions = new IA_Player();
         inputActions.Player.SetCallbacks(this);
         inputActions.Player.Enable();
+
+
     }
 
     private void FixedUpdate()

@@ -1,3 +1,4 @@
+using System.Runtime;
 using UnityEngine;
 public interface IMovement
 {
@@ -17,4 +18,10 @@ public interface IRotate
 public interface IFire
 {
     void Fire();
+}
+
+public interface IHealth
+{
+    void TakeDamage(int amount);
+    int currentHealth { get; }
 }
