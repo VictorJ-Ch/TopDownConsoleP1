@@ -60,6 +60,7 @@ public class FireController : IFire
 
         currentIndex++;
         uIManager?.UpdateBulletUI(maxBullets - currentIndex, maxBullets);
+        bullet.GetComponent<BulletBehaviour>().ResetBullet(fireSpawn.position);
     }
 
 

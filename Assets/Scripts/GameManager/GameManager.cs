@@ -1,11 +1,17 @@
 using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections;
+using UnityEngine.Networking;
+using System.Net;
 
 public class GameManager : MonoBehaviour
 {
+    public bool canStartGame = false;
+
     [Header("Wave Data")]
     public WaveData waveData;
+    public string url;
     private int currentWaveIndex = 0;
 
     [Header("Enemy Prefab")]
@@ -20,11 +26,14 @@ public class GameManager : MonoBehaviour
     private float waveTimer = 0f;
     private bool waveFullySpawned = false;
 
+    [SerializeField] private UIManager uIManager;
 
     private void Start()
     {
-        LoadWaveData();
-        StartWave(currentWaveIndex);
+        Time.timeScale = 1;
+        //LoadWaveData();
+        StartCoroutine(JsonData());
+        StartCoroutine(LateStartGame());
     }
 
     private void Update()
@@ -56,7 +65,7 @@ public class GameManager : MonoBehaviour
 
         activeEnemies.RemoveAll(e => e == null || !e.activeInHierarchy);
 
-        if (waveFullySpawned && activeEnemies.Count == 0)
+        if (waveFullySpawned && activeEnemies.Count == 0 && canStartGame) 
         {
             currentWaveIndex++;
             if (currentWaveIndex < waveData.Waves.Length)
@@ -66,11 +75,23 @@ public class GameManager : MonoBehaviour
             else
             {
                 Debug.Log("Todas las oleadas completadas.");
+                uIManager?.WinScreen();
             }
         }
     }
 
+    private void LateUpdate()
+    {
+        
+    }
 
+
+    public IEnumerator LateStartGame()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canStartGame = true;
+        StartWave(currentWaveIndex);
+    }
 
     private void LoadWaveData()
     {
@@ -82,8 +103,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void StartWave(int waveIndex)
+    private IEnumerator JsonData()
     {
+        WWWForm form = new WWWForm();
+        UnityWebRequest webRequest = UnityWebRequest.Get(url);
+        yield return webRequest.SendWebRequest();
+
+        if (webRequest.result.Equals(UnityWebRequest.Result.Success))
+        {
+            waveData = JsonUtility.FromJson<WaveData>(webRequest.downloadHandler.text);
+        }
+    }
+
+    public void StartWave(int waveIndex)
+    {
+        uIManager?.UpdateWaveCounter(waveIndex + 1);
         waveFullySpawned = false;
 
         Wave wave = waveData.Waves[waveIndex];

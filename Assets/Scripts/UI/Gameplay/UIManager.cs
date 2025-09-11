@@ -7,15 +7,22 @@ public class UIManager : MonoBehaviour
 {
     [Header("Animation")]
     private Coroutine rechargingAnim;
+    [SerializeField] private Animator waveTextAnimator;
+
 
     [Header("Health")]
     [SerializeField] private Slider playersUIHealth;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject gameOverDefaultButton;
     [SerializeField] private GameObject winPanel;
+    [SerializeField] private GameObject winDefaultButton;
 
     [Header("Bullets")]
     [SerializeField] private TextMeshProUGUI bulletStatusText;
     [SerializeField] private TextMeshProUGUI bulletCountText;
+
+    [Header("Waves")]
+    [SerializeField] private TextMeshProUGUI wavesCount;
 
     private void Start()
     {
@@ -31,15 +38,26 @@ public class UIManager : MonoBehaviour
 
     public void GameOverScreen()
     {
-        if (gameOverPanel != null) { gameOverPanel.SetActive(true); }
-        // Do not forget to pause time.
+        gameOverPanel.SetActive(true);
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(gameOverDefaultButton);
+        Time.timeScale = 0;
     }
 
     public void WinScreen()
     {
-        if (winPanel != null) { winPanel.SetActive(true); }
-        // Do not forget to pause time.
+        winPanel.SetActive(true);
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(winDefaultButton);
+        Time.timeScale = 0;
     }
+
+    public void UpdateWaveCounter(int waveNumber)
+    {
+        if (wavesCount == null) return;
+
+        wavesCount.text = $"Wave {waveNumber}";
+        waveTextAnimator.Play("FadeIn", 0, 0f);
+    }
+
 
     public void UpdateBulletUI(int available, int total)
     {
